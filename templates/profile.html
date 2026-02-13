@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Profile</title></head>
+<body>
+  <h2>Display Page (User Info)</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+    {% endif %}
+  {% endwith %}
+
+  <p><b>Username:</b> {{ user["username"] }}</p>
+  <p><b>First Name:</b> {{ user["firstname"] or "" }}</p>
+  <p><b>Last Name:</b> {{ user["lastname"] or "" }}</p>
+  <p><b>Email:</b> {{ user["email"] or "" }}</p>
+  <p><b>Address:</b> {{ user["address"] or "" }}</p>
+
+  <hr>
+
+  <h3>Upload Limerick.txt</h3>
+  <form method="POST" action="/upload/{{ user['username'] }}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".txt" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  <p>
+    <b>Stored file:</b> {{ user["filename"] or "None" }}<br>
+    <b>Word count:</b> {{ user["wordcount"] if user["wordcount"] is not none else "N/A" }}
+  </p>
+
+  <form method="GET" action="/download/{{ user['username'] }}">
+    <button type="submit">Download Stored File</button>
+  </form>
+
+  <hr>
+  <p><a href="/login">Re-login</a> | <a href="/">Register another user</a></p>
+</body>
+</html>
+
