@@ -1,40 +1,142 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Profile</title></head>
+<head>
+  <meta charset="utf-8">
+  <title>Profile</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f2f5f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      background: white;
+      padding: 30px 40px;
+      width: 450px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .info p {
+      margin: 6px 0;
+    }
+
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 12px;
+    }
+
+    button {
+      padding: 10px;
+      background: #2c7be5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    button:hover {
+      background: #1a68d1;
+    }
+
+    .file-info {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: #2c7be5;
+      margin: 0 8px;
+      font-weight: bold;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    ul {
+      color: green;
+      padding-left: 18px;
+    }
+  </style>
+</head>
+
 <body>
-  <h2>Display Page (User Info)</h2>
+  <div class="card">
+    <h2>User Profile</h2>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul>{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
-    {% endif %}
-  {% endwith %}
+    <div class="info">
+      <p><b>Username:</b> {{ user["username"] }}</p>
+      <p><b>First Name:</b> {{ user["firstname"] or "" }}</p>
+      <p><b>Last Name:</b> {{ user["lastname"] or "" }}</p>
+      <p><b>Email:</b> {{ user["email"] or "" }}</p>
+      <p><b>Address:</b> {{ user["address"] or "" }}</p>
+    </div>
 
-  <p><b>Username:</b> {{ user["username"] }}</p>
-  <p><b>First Name:</b> {{ user["firstname"] or "" }}</p>
-  <p><b>Last Name:</b> {{ user["lastname"] or "" }}</p>
-  <p><b>Email:</b> {{ user["email"] or "" }}</p>
-  <p><b>Address:</b> {{ user["address"] or "" }}</p>
+    <hr>
 
-  <hr>
+    <h3>Upload File</h3>
 
-  <h3>Upload Limerick.txt</h3>
-  <form method="POST" action="/upload/{{ user['username'] }}" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".txt" required>
-    <button type="submit">Upload</button>
-  </form>
+    <form method="POST" action="/upload/{{ user['username'] }}" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".txt" required>
+      <button type="submit">Upload File</button>
+    </form>
 
-  <p>
-    <b>Stored file:</b> {{ user["filename"] or "None" }}<br>
-    <b>Word count:</b> {{ user["wordcount"] if user["wordcount"] is not none else "N/A" }}
-  </p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for m in messages %}
+            <li>{{ m }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
-  <form method="GET" action="/download/{{ user['username'] }}">
-    <button type="submit">Download Stored File</button>
-  </form>
+    <div class="file-info">
+      <p><b>Stored file:</b> {{ user["filename"] or "None" }}</p>
+      <p><b>Word count:</b> {{ user["wordcount"] if user["wordcount"] is not none else "N/A" }}</p>
+    </div>
 
-  <hr>
-  <p><a href="/login">Sign-out</a> | <a href="/">Register another user</a></p>
+    <form method="GET" action="/download/{{ user['username'] }}">
+      <button type="submit">Download Stored File</button>
+    </form>
+
+    <div class="links">
+      <a href="/login">Sign Out</a> |
+      <a href="/">Register another user</a>
+    </div>
+  </div>
 </body>
 </html>
+
 
